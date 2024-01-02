@@ -19,7 +19,7 @@ const props = defineProps({
     :style="props.customStyle"
     type="text"
     :name="props.name"
-    @input="$emit('model', event.target.value)"
+    @input="($event) => $emit('model', $event.target.value)"
   />
 </template>
 <style lang="scss" scoped>

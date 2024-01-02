@@ -2,18 +2,14 @@
 import { reactive, PropType } from "vue";
 
 const label = reactive({
-  one: "Seja Bem vindo (a)",
-  two: "Pessoa Física",
-  three: "Pessoa Jurídica",
-  four: "Senha de acesso",
-  five: "Revise suas informacoes",
+  "step-one": "Seja Bem vindo (a)",
+  "step-two": "Pessoa Física",
+  "step-three": "Pessoa Jurídica",
+  "step-four": "Senha de acesso",
+  "step-five": "Revise suas informacoes",
 });
 
 const props = defineProps({
-  step: {
-    type: String,
-    required: true,
-  },
   customStyle: {
     type: Object as PropType<{
       [key: string]: string;
@@ -22,7 +18,9 @@ const props = defineProps({
 });
 </script>
 <template>
-  <h1 class="title" :style="props.customStyle">{{ label[props.step] }}</h1>
+  <h1 class="title" :style="props.customStyle">
+    {{ label[$router.currentRoute.value.name] }}
+  </h1>
 </template>
 <style lang="scss" scoped>
 .title {

@@ -13,7 +13,7 @@ const AtomInput = loadComponent("atoms", "AtomInput.vue");
 <template>
   <div class="input-control">
     <span class="label">Nome</span>
-    <AtomInput :name="props.name" @model="emit('model', value)" />
+    <AtomInput :name="props.name" @model="(value) => $emit('model', value)" />
   </div>
 </template>
 <style lang="scss" scoped>

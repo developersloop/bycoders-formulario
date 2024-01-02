@@ -2,8 +2,15 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: () => import("@/components/templates/TemplateForm.vue"),
+    name: "step-one",
+    component: () => import("@/components/templates/TemplateHome.vue"),
+    children: [
+      {
+        path: "step-two",
+        name: "step-two",
+        component: () => import("@/components/templates/common/StepTwo.vue"),
+      },
+    ],
   },
 ];
 

@@ -5,18 +5,14 @@ import { loadComponent } from "@/utils";
 const AtomHeader = loadComponent("atoms", "AtomHeader.vue");
 
 const prefix = reactive({
-  one: 1,
-  two: 2,
-  three: 3,
-  four: 4,
-  five: 5,
+  "step-one": 1,
+  "step-two": 2,
+  "step-three": 3,
+  "step-four": 4,
+  "step-five": 5,
 });
 
 const props = defineProps({
-  step: {
-    type: String,
-    required: true,
-  },
   customStyle: {
     type: Object as PropType<{
       [key: string]: string;
@@ -26,8 +22,10 @@ const props = defineProps({
 </script>
 <template>
   <div>
-    Etapa <span class="prefix">{{ prefix[props.step] }}</span> de 5
-    <AtomHeader :style="props.customStyle" :step="props.step" />
+    Etapa
+    <span class="prefix">{{ prefix[$router.currentRoute.value.name] }}</span> de
+    5
+    <AtomHeader :style="props.customStyle" />
   </div>
 </template>
 <style lang="scss" scoped>
