@@ -60,7 +60,7 @@ $color: #f39c12;
   }
 
   &.-md {
-    width: 15rem;
+    width: 12rem;
   }
 
   &.-lg {

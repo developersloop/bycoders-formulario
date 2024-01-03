@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { PropType } from "vue";
+import { PropType, reactive, ref, watch } from "vue";
+
+const model = ref();
 
 const props = defineProps({
   type: {
@@ -15,25 +17,39 @@ const props = defineProps({
       [key: string]: string;
     }>,
   },
-  value: [String, Number, Boolean],
+  mask: {
+    type: String,
+    default: "X".repeat(50),
+  },
 });
 </script>
 <template>
   <input
-    v-show="props.type"
+    v-if="props.name != 'email' && props.name != 'password'"
     class="input"
+    v-model="model"
+    v-mask="props.mask"
+    :style="props.customStyle"
+    :type="props.type"
+    :name="props.name"
+    @input="($event) => $emit('model', model)"
+  />
+  <input
+    v-else
+    class="input"
+    v-model="model"
     :style="props.customStyle"
     :type="props.type"
     :name="props.name"
     :value="props.value"
-    @input="($event) => $emit('model', $event.target.value)"
+    @input="($event) => $emit('model', model)"
   />
 </template>
 <style lang="scss" scoped>
 .input {
   border: 2px solid black;
   width: 250px;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 8px;
 }
 </style>

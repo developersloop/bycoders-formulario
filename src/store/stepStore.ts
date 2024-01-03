@@ -11,9 +11,9 @@ export const stepStore = defineStore("stepStore", {
     setStep(step: string): void {
       this._currentStep = step;
     },
-    setForm(form: unknow): void {
+    setForm(step: string, form: unknow): void {
       this._form = {
-        stepOne: { ...form },
+        [step]: { ...form },
       };
     },
   },

@@ -6,10 +6,10 @@ const AtomHeader = loadComponent("atoms", "AtomHeader.vue");
 
 const prefix = reactive({
   "step-one": 1,
-  "step-two": 2,
+  "step-two_pessoa_fisica": 2,
+  "step-two_pessoa_juridica": 2,
   "step-three": 3,
   "step-four": 4,
-  "step-five": 5,
 });
 
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
   <div>
     Etapa
     <span class="prefix">{{ prefix[$router.currentRoute.value.name] }}</span> de
-    5
+    4
     <AtomHeader :style="props.customStyle" />
   </div>
 </template>

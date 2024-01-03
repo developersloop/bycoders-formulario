@@ -3,10 +3,10 @@ import { reactive, PropType } from "vue";
 
 const label = reactive({
   "step-one": "Seja Bem vindo (a)",
-  "step-two": "Pessoa Física",
-  "step-three": "Pessoa Jurídica",
-  "step-four": "Senha de acesso",
-  "step-five": "Revise suas informacoes",
+  "step-two_pessoa_fisica": "Pessoa Física",
+  "step-two_pessoa_juridica": "Pessoa Jurídica",
+  "step-three": "Senha de acesso",
+  "step-four": "Revise suas informacoes",
 });
 
 const props = defineProps({

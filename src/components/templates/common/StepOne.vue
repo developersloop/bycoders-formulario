@@ -18,10 +18,6 @@ let modelValues: {
   [key: string]: any;
 } = reactive({});
 
-const getStep: ComputedRef = computed(() => {
-  return router.currentRoute.value.query?.step ?? "one";
-});
-
 const stepInvalid: ComputedRef = computed(() => {
   return !modelValues?.email || !modelValues?.typePessoa || !isValidEmail.value;
 });
@@ -30,8 +26,16 @@ function input(name: string, value: string): void {
   modelValues[name] = value;
 }
 
+function nextStep(): void {
+  if (modelValues["typePessoa"].includes("PF")) {
+    router.push({ path: "/step-two/pessoa_fisica" });
+  } else {
+    router.push({ path: "/step-two/pessoa_juridica" });
+  }
+  store.setStep(routerName);
+}
 watch(modelValues, function (value) {
-  store.setForm(value);
+  store.setForm(routerName.value, value);
 });
 </script>
 <template>
@@ -39,7 +43,7 @@ watch(modelValues, function (value) {
     <template #context>
       {{ modelValues }}
       <div class="form-step">
-        <MoleculeHeader :step="getStep" />
+        <MoleculeHeader />
         <MoleculeInput
           type="text"
           label="Endereço de e-mail"
@@ -69,12 +73,7 @@ watch(modelValues, function (value) {
           label="Continuar"
           size="lg"
           :disabled="stepInvalid"
-          @click.prevent="
-            () => {
-              $router.push({ path: '/step-two' });
-              store.setStep(routerName);
-            }
-          "
+          @click.prevent="nextStep()"
         />
       </div>
     </template>

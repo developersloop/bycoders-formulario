@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-import { PropType, ref, watchEffect } from "vue";
+import { PropType, ref, watchEffect, ComputedRef, computed } from "vue";
 import { loadComponent } from "@/utils";
 
 const props = defineProps({
-  value: {
-    type: [String, Number, Boolean],
-    default: null,
-  },
+  mask: [String],
   type: {
     type: String,
     default: "text",
@@ -35,23 +32,28 @@ const emit = defineEmits<{
 const isValidEmail = ref(false);
 const model = ref();
 
+const showErrorMessage: ComputedRef = computed(() => {
+  return (
+    props.name == "email" &&
+    !isValidEmail.value &&
+    props.type == "text" &&
+    model.value
+  );
+});
 function validateEmail(): boolean {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   isValidEmail.value = regex.test(model.value);
 }
 
 watchEffect(() => {
-  if (model.value) {
-    emit("model", model.value);
-  }
-
+  emit("model", model.value);
   emit("error", isValidEmail.value);
 });
 </script>
 <template>
   <div
     class="input-control"
-    :style="{ flexFlow: props.type == 'text' ? 'column wrap' : 'row wrap' }"
+    :style="{ flexFlow: props.type != 'radio' ? 'column wrap' : 'row wrap' }"
   >
     <span class="label">{{ props.label }}</span>
     <AtomInput
@@ -59,10 +61,11 @@ watchEffect(() => {
       :name="props.name"
       :value="props.value"
       :style="props.customStyle"
+      :mask="props.mask"
       @input="validateEmail"
       @model="(value) => (model = value)"
     />
-    <p v-if="!isValidEmail && props.type == 'text' && model" style="color: red">
+    <p v-if="showErrorMessage" style="color: red">
       Por favor, insira um e-mail válido.
     </p>
   </div>
