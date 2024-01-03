@@ -4,7 +4,7 @@ import { PropType } from "vue";
 enum ESizes {
   "sm",
   "md",
-  "lg"
+  "lg",
 }
 const props = defineProps({
   label: {
@@ -22,15 +22,29 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    default: "default"
-  }
+    default: "default",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 <template>
-  <button :style="props.customStyle" :class="['button', `-${props.size}`, `-${props.variant}`]">{{ props.label }}</button>
+  <button
+    :style="props.customStyle"
+    :class="[
+      'button',
+      `-${props.size}`,
+      `-${props.variant}`,
+      `-${props.disabled ? 'disabled' : ''}`,
+    ]"
+  >
+    {{ props.label }}
+  </button>
 </template>
 <style lang="scss" scoped>
-$color:  #F39C12;
+$color: #f39c12;
 
 .button {
   color: white;
@@ -39,7 +53,7 @@ $color:  #F39C12;
   border: 1px solid transparent;
   border-radius: 7px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 15px;
 
   &.-sm {
     width: 10rem;
@@ -59,6 +73,10 @@ $color:  #F39C12;
     color: $color;
   }
 
+  &.-disabled {
+    opacity: 0.2;
+    pointer-events: none;
+  }
   @media (max-width: 700px) {
     & * {
       width: 100%;

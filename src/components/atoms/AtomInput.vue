@@ -2,6 +2,10 @@
 import { PropType } from "vue";
 
 const props = defineProps({
+  type: {
+    type: String,
+    default: "text",
+  },
   name: {
     type: String,
     required: true,
@@ -11,14 +15,17 @@ const props = defineProps({
       [key: string]: string;
     }>,
   },
+  value: [String, Number, Boolean],
 });
 </script>
 <template>
   <input
+    v-show="props.type"
     class="input"
     :style="props.customStyle"
-    type="text"
+    :type="props.type"
     :name="props.name"
+    :value="props.value"
     @input="($event) => $emit('model', $event.target.value)"
   />
 </template>
