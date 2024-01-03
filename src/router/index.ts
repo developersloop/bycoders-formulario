@@ -4,7 +4,13 @@ const routes = [
     path: "/",
     name: "step-one",
     component: () => import("@/components/templates/TemplateHome.vue"),
+    redirect: "/step-one",
     children: [
+      {
+        path: "step-one",
+        name: "step-one",
+        component: () => import("@/components/templates/common/StepOne.vue"),
+      },
       {
         path: "step-two",
         name: "step-two",
