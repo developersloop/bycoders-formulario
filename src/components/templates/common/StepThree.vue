@@ -22,7 +22,12 @@ let modelValues: {
 
 onMounted(() => {
   modelValues["step-one"] = { ..._form.value["step-one"] };
-  modelValues["step-two"] = { ..._form.value["step-two"] };
+  modelValues["step-two_pessoa_fisica"] = {
+    ..._form.value["step-two_pessoa_fisica"],
+  };
+  modelValues["step-two_pessoa_juridica"] = {
+    ..._form.value["step-two_pessoa_juridica"],
+  };
 });
 
 function input(name: string, value: string): void {
@@ -30,13 +35,16 @@ function input(name: string, value: string): void {
 }
 
 watch(modelValues, function (value) {
-  store.setForm(routerName.value, value);
+  const spreadModelValues = { ...value };
+  delete spreadModelValues["step-one"];
+  delete spreadModelValues["step-two_pessoa_fisica"];
+  delete spreadModelValues["step-two_pessoa_juridica"];
+  store.setForm("step-three", spreadModelValues);
 });
 </script>
 <template>
   <OrganismGrid>
     <template #context>
-      {{ modelValues }}
       <div class="form-step_two_three">
         <MoleculeHeader />
         <MoleculeInput
@@ -68,6 +76,7 @@ watch(modelValues, function (value) {
 </template>
 <style lang="scss" scoped>
 .form-step_two_three {
+  width: 30rem;
   > .actions {
     display: flex;
     flex-flow: row wrap;

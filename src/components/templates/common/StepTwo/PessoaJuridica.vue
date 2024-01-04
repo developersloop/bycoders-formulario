@@ -16,6 +16,13 @@ const { _form } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
 const isValidEmail = ref(false);
 
+const props = defineProps({
+  isSlot: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 let modelValues: {
   [key: string]: any;
 } = reactive({});
@@ -38,15 +45,17 @@ function input(name: string, value: string): void {
 }
 
 watch(modelValues, function (value) {
-  store.setForm(routerName.value, value);
+  const spreadModelValues = { ...value };
+  delete spreadModelValues["step-one"];
+  store.setForm("step-two_pessoa_juridica", spreadModelValues);
 });
 </script>
 <template>
   <OrganismGrid>
     <template #context>
-      {{ modelValues }}
       <div class="form-step_two_juridica">
-        <MoleculeHeader />
+        <MoleculeHeader v-if="!props.isSlot" />
+        <slot name="custom-header" v-if="props.isSlot"></slot>
         <MoleculeInput
           type="text"
           label="Razão Social"
@@ -74,7 +83,8 @@ watch(modelValues, function (value) {
           name="phone"
           @model="(value) => input('phone', value)"
         />
-        <div class="actions">
+        <slot name="custom" v-if="props.isSlot"></slot>
+        <div class="actions" v-if="!props.isSlot">
           <AtomButton
             label="Voltar"
             variant="outlined"
@@ -97,6 +107,7 @@ watch(modelValues, function (value) {
 </template>
 <style lang="scss" scoped>
 .form-step_two_juridica {
+  width: 30rem;
   & > * {
     margin-bottom: 15px;
   }

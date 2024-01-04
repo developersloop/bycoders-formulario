@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import { ComputedRef, computed, reactive, ref, watch, onMounted } from "vue";
+import {
+  ComputedRef,
+  computed,
+  reactive,
+  ref,
+  watch,
+  onMounted,
+  defineAsyncComponent,
+} from "vue";
 import { loadComponent } from "@/utils";
 import { useRouter } from "vue-router";
 import { stepStore } from "@/store/stepStore";
@@ -16,38 +24,26 @@ const { _form } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
 const isValidEmail = ref(false);
 
-let modelValues: {
-  [key: string]: any;
-} = reactive({});
+const nameComponent = _form.value["step-one"]?.typePessoa?.includes("PF")
+  ? "PessoaFisica"
+  : "PessoaJuridica";
+
+const dynamicComponent = defineAsyncComponent({
+  loader: () =>
+    import(`@/components/templates/common/StepTwo/${nameComponent}.vue`),
+});
 
 onMounted(() => {
-  modelValues["step-one"] = { ..._form.value["step-one"] };
-  modelValues["step-two"] = { ..._form.value["step-two"] };
-  modelValues["step-three"] = { ..._form.value["step-three"] };
-});
-
-const stepInvalid: ComputedRef = computed(() => {
-  return (
-    !modelValues["nome"] ||
-    !modelValues["cpf"] ||
-    !modelValues["data_nascimento"] ||
-    !modelValues["phone"]
-  );
-});
-
-function input(name: string, value: string): void {
-  modelValues[name] = value;
-}
-
-watch(modelValues, function (value) {
-  store.setForm(routerName.value, value);
+  // console.log(;
 });
 </script>
 <template>
-  <OrganismGrid>
-    <template #context>
-      {{ modelValues }}
-      <div class="form-step_four">
+  <div class="form-step_four">
+    <dynamicComponent isSlot>
+      <template #custom-header>
+        <MoleculeHeader :customStyle="{ width: 'max-content' }" />
+      </template>
+      <template #custom>
         <MoleculeInput
           type="password"
           label="password"
@@ -62,16 +58,14 @@ watch(modelValues, function (value) {
           />
           <AtomButton label="Cadastrar" :disabled="stepInvalid" />
         </div>
-      </div>
-    </template>
-  </OrganismGrid>
+      </template>
+    </dynamicComponent>
+  </div>
 </template>
 <style lang="scss" scoped>
-.form-step_four {
-  > .actions {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-  }
+.actions {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
 }
 </style>

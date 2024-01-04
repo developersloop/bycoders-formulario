@@ -41,7 +41,6 @@ watch(modelValues, function (value) {
 <template>
   <OrganismGrid>
     <template #context>
-      {{ modelValues }}
       <div class="form-step">
         <MoleculeHeader />
         <MoleculeInput
@@ -81,6 +80,7 @@ watch(modelValues, function (value) {
 </template>
 <style lang="scss" scoped>
 .form-step {
+  width: 30rem;
   > .people-type {
     display: flex;
     flex-flow: row wrap;

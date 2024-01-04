@@ -64,7 +64,7 @@ $color: #f39c12;
   }
 
   &.-lg {
-    width: 27rem;
+    width: 30rem;
   }
 
   &.-outlined {

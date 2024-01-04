@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     default: "text",
   },
+  value: {
+    type: String,
+    default: null,
+  },
   label: {
     type: String,
     required: true,
@@ -58,10 +62,10 @@ watchEffect(() => {
     <span class="label">{{ props.label }}</span>
     <AtomInput
       :type="props.type"
-      :name="props.name"
-      :value="props.value"
       :style="props.customStyle"
+      :name="props.name"
       :mask="props.mask"
+      :value="props.value"
       @input="validateEmail"
       @model="(value) => (model = value)"
     />
