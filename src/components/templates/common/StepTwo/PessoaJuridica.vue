@@ -42,6 +42,10 @@ function input(name: string, value: string): void {
     store.setForm("step-two_pessoa_juridica", name, value);
   }
 }
+
+onMounted(() => {
+  _form.value["step-two_pessoa_fisica"] = {};
+});
 </script>
 <template>
   <OrganismGrid>
@@ -53,6 +57,7 @@ function input(name: string, value: string): void {
           label="Razão Social"
           name="razao_social"
           :value="_form['step-two_pessoa_juridica']?.razao_social"
+          :readonly="isSlot"
           @model="(value) => input('razao_social', value)"
         />
         <MoleculeInput
@@ -61,6 +66,7 @@ function input(name: string, value: string): void {
           mask="##.###.###/####-##"
           name="cnpj"
           :value="_form['step-two_pessoa_juridica']?.cnpj"
+          :readonly="isSlot"
           @model="(value) => input('cnpj', value)"
         />
         <MoleculeInput
@@ -69,6 +75,7 @@ function input(name: string, value: string): void {
           mask="##/##/####"
           name="data_abertura"
           :value="_form['step-two_pessoa_juridica']?.data_abertura"
+          :readonly="isSlot"
           @model="(value) => input('data_abertura', value)"
         />
         <MoleculeInput
@@ -77,6 +84,7 @@ function input(name: string, value: string): void {
           mask="(##)#####-####"
           name="phone"
           :value="_form['step-two_pessoa_juridica']?.phone"
+          :readonly="isSlot"
           @model="(value) => input('phone', value)"
         />
         <slot name="custom" v-if="props.isSlot"></slot>

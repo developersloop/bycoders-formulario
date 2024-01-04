@@ -42,6 +42,10 @@ function input(name: string, value: string): void {
     store.setForm("step-two_pessoa_fisica", name, value);
   }
 }
+
+onMounted(() => {
+  _form.value["step-two_pessoa_juridica"] = {};
+});
 </script>
 <template>
   <OrganismGrid>
@@ -53,6 +57,7 @@ function input(name: string, value: string): void {
           label="Nome"
           name="nome"
           :value="_form['step-two_pessoa_fisica']?.nome"
+          :readonly="isSlot"
           @model="(value) => input('nome', value)"
         />
         <MoleculeInput
@@ -61,6 +66,7 @@ function input(name: string, value: string): void {
           mask="###.###.###-##"
           name="cpf"
           :value="_form['step-two_pessoa_fisica']?.cpf"
+          :readonly="isSlot"
           @model="(value) => input('cpf', value)"
         />
         <MoleculeInput
@@ -69,6 +75,7 @@ function input(name: string, value: string): void {
           mask="##/##/####"
           name="data_nascimento"
           :value="_form['step-two_pessoa_fisica']?.data_nascimento"
+          :readonly="isSlot"
           @model="(value) => input('data_nascimento', value)"
         />
         <MoleculeInput
@@ -77,6 +84,7 @@ function input(name: string, value: string): void {
           mask="(##)#####-####"
           name="phone"
           :value="_form['step-two_pessoa_fisica']?.phone"
+          :readonly="isSlot"
           @model="(value) => input('phone', value)"
         />
         <slot name="custom" v-if="props.isSlot"></slot>

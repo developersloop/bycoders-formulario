@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ComputedRef, computed, reactive, ref, watch, onMounted } from "vue";
 import { loadComponent } from "@/utils";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { stepStore } from "@/store/stepStore";
 import { storeToRefs } from "pinia";
 
@@ -11,8 +11,9 @@ const MoleculeHeader = loadComponent("molecules", "MoleculeHeader.vue");
 const MoleculeInput = loadComponent("molecules", "MoleculeInput.vue");
 
 const router = useRouter();
+const route = useRoute();
 const store = stepStore();
-const { _form } = storeToRefs(store);
+const { _form, _currentStep } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
 const isValidEmail = ref(false);
 
@@ -33,6 +34,23 @@ function input(name: string, value: string): void {
     store.setForm("step-three", name, value);
   }
 }
+
+function goBack(): void {
+  console.log(router);
+  router.push({
+    path: localStorage.getItem("route-back-step-three") ?? router.back(),
+  });
+}
+
+function nextStep(): void {
+  localStorage.setItem(
+    "route-back-step-three",
+    router.options.history.state.back
+  );
+
+  router.push({ path: "/step-four" });
+  store.setStep(routerName);
+}
 </script>
 <template>
   <OrganismGrid>
@@ -44,23 +62,19 @@ function input(name: string, value: string): void {
           label="Sua Senha"
           name="password"
           :value="_form['step-three'].password"
+          :readonly="isSlot"
           @model="(value) => input('password', value)"
         />
         <div class="actions" v-if="!props.isSlot">
           <AtomButton
             label="Voltar"
             variant="outlined"
-            @click.prevent="$router.go(-1)"
+            @click.prevent="goBack"
           />
           <AtomButton
             label="Continuar"
             :disabled="!_form['step-three']?.password"
-            @click.prevent="
-              () => {
-                $router.push({ path: '/step-four' });
-                store.setStep(routerName);
-              }
-            "
+            @click.prevent="nextStep()"
           />
         </div>
       </div>

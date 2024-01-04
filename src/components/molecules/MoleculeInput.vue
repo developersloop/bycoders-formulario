@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
   label: {
     type: String,
     required: true,
@@ -71,6 +75,7 @@ watchEffect(() => {
       :mask="props.mask"
       :value="props.value"
       :checked="props.checked"
+      :readonly="props.readonly"
       @input="validateEmail"
       @model="(value) => (model = value)"
     />

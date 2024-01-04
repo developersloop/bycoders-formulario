@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { stepStore } from "@/store/stepStore";
-import { isNullish } from "@/utils";
-import { useRouter } from "vue-router";
 
 const midllewareGuard: (to: any, next: any) => void = (to, next) => {
   const store = stepStore();

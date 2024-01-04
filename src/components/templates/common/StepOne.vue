@@ -9,7 +9,7 @@ import {
   onBeforeUnmount,
   nextTick,
 } from "vue";
-import { loadComponent } from "@/utils";
+import { loadComponent, cleanCache } from "@/utils";
 import { useRouter } from "vue-router";
 import { stepStore } from "@/store/stepStore";
 import { storeToRefs } from "pinia";
@@ -57,6 +57,12 @@ function nextStep(): void {
   }
   store.setStep(routerName.value);
 }
+
+onMounted(() => {
+  if (!props.isSlot) {
+    cleanCache();
+  }
+});
 </script>
 <template>
   <OrganismGrid>
@@ -68,6 +74,7 @@ function nextStep(): void {
           label="Endereço de e-mail"
           name="email"
           :value="_form['step-one']?.email"
+          :readonly="isSlot"
           @model="(value) => input('email', value)"
           @error="
             (value) => {
@@ -83,6 +90,7 @@ function nextStep(): void {
             name="typePessoa"
             :checked="_form['step-one']?.typePessoa == 'PF'"
             :customStyle="{ width: 'max-content' }"
+            :readonly="isSlot"
             @model="(value) => input('typePessoa', value)"
           />
           <MoleculeInput
@@ -92,6 +100,7 @@ function nextStep(): void {
             name="typePessoa"
             :checked="_form['step-one']?.typePessoa == 'PJ'"
             :customStyle="{ width: 'max-content' }"
+            :readonly="isSlot"
             @model="(value) => input('typePessoa', value)"
           />
         </div>

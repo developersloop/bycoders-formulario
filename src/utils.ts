@@ -17,3 +17,7 @@ export const isNullish: (obj: any) => boolean = (obj: any) => {
     return false;
   });
 };
+
+export const cleanCache = () => {
+  localStorage.removeItem("route-back-step-three");
+};
