@@ -40,6 +40,10 @@ const stepTwo = defineAsyncComponent({
 const stepThree = defineAsyncComponent({
   loader: () => import(`@/components/templates/common/StepThree.vue`),
 });
+
+function fetchStore(): void {
+  store.persistForm(_form.value);
+}
 </script>
 <template>
   <div class="form-step_four">
@@ -53,7 +57,11 @@ const stepThree = defineAsyncComponent({
         variant="outlined"
         @click.prevent="$router.push({ path: '/step-three' })"
       />
-      <AtomButton label="Cadastrar" :disabled="stepInvalid" />
+      <AtomButton
+        label="Cadastrar"
+        :disabled="stepInvalid"
+        @click.prevent="fetchStore()"
+      />
     </div>
   </div>
 </template>

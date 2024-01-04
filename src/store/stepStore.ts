@@ -1,5 +1,7 @@
 // @ts-nocheck
+import { TPayload } from "@/types";
 import { defineStore } from "pinia";
+import axios from "axios";
 
 export const stepStore = defineStore("stepStore", {
   state: () => ({
@@ -32,6 +34,10 @@ export const stepStore = defineStore("stepStore", {
     },
     setForm(step: string, key: string, value: any): void {
       this._form[step][key] = value;
+    },
+    async persistForm(payload: TPayload) {
+      console.log(payload);
+      // await axios.post(`/cadastro/domiciliares/familia`, payload);
     },
   },
 });
