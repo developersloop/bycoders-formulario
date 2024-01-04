@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const stepStore = defineStore("stepStore", {
   state: () => ({
-    _currentStep: String,
+    _currentStep: "",
     _form: {
       "step-one": {
         email: null,

@@ -1,9 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { stepStore } from "@/store/stepStore";
+import { isNullish } from "@/utils";
+import { useRouter } from "vue-router";
 
+const midllewareGuard: (to: any, next: any) => void = (to, next) => {
+  const store = stepStore();
+
+  if (!store._currentStep) {
+    return next("/step-one");
+  } else {
+    return next();
+  }
+};
 const routes = [
   {
     path: "/",
-    name: "step-one",
+    name: "home",
     component: () => import("@/components/templates/TemplateHome.vue"),
     redirect: "/step-one",
     children: [
@@ -15,6 +27,9 @@ const routes = [
       {
         path: "step-two",
         name: "step-two",
+        beforeEnter: (to: any, from: any, next: any) => {
+          return midllewareGuard(to, next);
+        },
         component: () =>
           import("@/components/templates/common/StepTwo/StepTwo.vue"),
         children: [
@@ -37,11 +52,17 @@ const routes = [
       {
         path: "step-three",
         name: "step-three",
+        beforeEnter: (to: any, from: any, next: any) => {
+          return midllewareGuard(to, next);
+        },
         component: () => import("@/components/templates/common/StepThree.vue"),
       },
       {
         path: "step-four",
         name: "step-four",
+        beforeEnter: (to: any, from: any, next: any) => {
+          return midllewareGuard(to, next);
+        },
         component: () => import("@/components/templates/common/StepFour.vue"),
       },
     ],
@@ -49,7 +70,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 

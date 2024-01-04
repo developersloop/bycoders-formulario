@@ -28,7 +28,7 @@ let modelValues: {
 } = reactive({});
 
 function input(name: string, value: string): void {
-  if (value) {
+  if (value != null) {
     modelValues[name] = value;
     store.setForm("step-three", name, value);
   }
@@ -54,7 +54,7 @@ function input(name: string, value: string): void {
           />
           <AtomButton
             label="Continuar"
-            :disabled="!modelValues['password']"
+            :disabled="!_form['step-three']?.password"
             @click.prevent="
               () => {
                 $router.push({ path: '/step-four' });

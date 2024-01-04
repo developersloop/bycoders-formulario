@@ -10,3 +10,10 @@ export const loadComponent: (type: string, nameComponent: string) => string = (
     loader: () => import("@/components/" + type + "/" + nameComponent),
   });
 };
+
+export const isNullish: (obj: any) => boolean = (obj: any) => {
+  return Object.values(obj).every((value) => {
+    if (value === null) return true;
+    return false;
+  });
+};
