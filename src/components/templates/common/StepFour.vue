@@ -28,44 +28,46 @@ const nameComponent = _form.value["step-one"]?.typePessoa?.includes("PF")
   ? "PessoaFisica"
   : "PessoaJuridica";
 
-const dynamicComponent = defineAsyncComponent({
+const stepOne = defineAsyncComponent({
+  loader: () => import(`@/components/templates/common/StepOne.vue`),
+});
+
+const stepTwo = defineAsyncComponent({
   loader: () =>
     import(`@/components/templates/common/StepTwo/${nameComponent}.vue`),
 });
 
-onMounted(() => {
-  // console.log(;
+const stepThree = defineAsyncComponent({
+  loader: () => import(`@/components/templates/common/StepThree.vue`),
 });
 </script>
 <template>
   <div class="form-step_four">
-    <dynamicComponent isSlot>
-      <template #custom-header>
-        <MoleculeHeader :customStyle="{ width: 'max-content' }" />
-      </template>
-      <template #custom>
-        <MoleculeInput
-          type="password"
-          label="password"
-          name="password"
-          @model="(value) => input('password', value)"
-        />
-        <div class="actions">
-          <AtomButton
-            label="Voltar"
-            variant="outlined"
-            @click.prevent="$router.push({ path: '/step-three' })"
-          />
-          <AtomButton label="Cadastrar" :disabled="stepInvalid" />
-        </div>
-      </template>
-    </dynamicComponent>
+    <MoleculeHeader :customStyle="{ width: 'max-content' }" />
+    <stepOne isSlot :customStyle="{ padding: '0', marginBottom: '15px' }" />
+    <stepTwo isSlot :customStyle="{ padding: '0' }" />
+    <stepThree isSlot :customStyle="{ padding: '0' }" />
+    <div class="actions">
+      <AtomButton
+        label="Voltar"
+        variant="outlined"
+        @click.prevent="$router.push({ path: '/step-three' })"
+      />
+      <AtomButton label="Cadastrar" :disabled="stepInvalid" />
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
-.actions {
+.form-step_four {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  flex-flow: column nowrap;
+  align-items: center;
+  > .actions {
+    margin-top: 10px;
+    width: 30rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
 }
 </style>

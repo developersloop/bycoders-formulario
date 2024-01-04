@@ -27,39 +27,32 @@ let modelValues: {
   [key: string]: any;
 } = reactive({});
 
-onMounted(() => {
-  modelValues["step-one"] = { ..._form.value["step-one"] };
-});
-
 const stepInvalid: ComputedRef = computed(() => {
   return (
-    !modelValues["nome"] ||
-    !modelValues["cpf"] ||
-    !modelValues["data_nascimento"] ||
-    !modelValues["phone"]
+    !_form.value["step-two_pessoa_fisica"]?.nome ||
+    !_form.value["step-two_pessoa_fisica"]?.cpf ||
+    !_form.value["step-two_pessoa_fisica"]?.phone ||
+    !_form.value["step-two_pessoa_fisica"]?.data_nascimento
   );
 });
 
 function input(name: string, value: string): void {
-  modelValues[name] = value;
+  if (value) {
+    modelValues[name] = value;
+    store.setForm("step-two_pessoa_fisica", name, value);
+  }
 }
-
-watch(modelValues, function (value) {
-  const spreadModelValues = { ...value };
-  delete spreadModelValues["step-one"];
-  store.setForm("step-two_pessoa_fisica", spreadModelValues);
-});
 </script>
 <template>
   <OrganismGrid>
     <template #context>
       <div class="form-step_two_fisica">
         <MoleculeHeader v-if="!props.isSlot" />
-        <slot name="custom-header" v-if="props.isSlot"></slot>
         <MoleculeInput
           type="text"
           label="Nome"
           name="nome"
+          :value="_form['step-two_pessoa_fisica']?.nome"
           @model="(value) => input('nome', value)"
         />
         <MoleculeInput
@@ -67,6 +60,7 @@ watch(modelValues, function (value) {
           label="CPF"
           mask="###.###.###-##"
           name="cpf"
+          :value="_form['step-two_pessoa_fisica']?.cpf"
           @model="(value) => input('cpf', value)"
         />
         <MoleculeInput
@@ -74,6 +68,7 @@ watch(modelValues, function (value) {
           label="Data de nascimento"
           mask="##/##/####"
           name="data_nascimento"
+          :value="_form['step-two_pessoa_fisica']?.data_nascimento"
           @model="(value) => input('data_nascimento', value)"
         />
         <MoleculeInput
@@ -81,6 +76,7 @@ watch(modelValues, function (value) {
           label="Telefone"
           mask="(##)#####-####"
           name="phone"
+          :value="_form['step-two_pessoa_fisica']?.phone"
           @model="(value) => input('phone', value)"
         />
         <slot name="custom" v-if="props.isSlot"></slot>

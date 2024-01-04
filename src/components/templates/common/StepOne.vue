@@ -1,9 +1,19 @@
 <script lang="ts" setup>
-import { ComputedRef, computed, reactive, ref, watch } from "vue";
+import {
+  ComputedRef,
+  computed,
+  reactive,
+  ref,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import { loadComponent } from "@/utils";
 import { useRouter } from "vue-router";
 import { stepStore } from "@/store/stepStore";
-
+import { storeToRefs } from "pinia";
+import _ from "lodash";
 const OrganismGrid = loadComponent("organisms", "OrganismGrid.vue");
 const AtomButton = loadComponent("atoms", "AtomButton.vue");
 const MoleculeHeader = loadComponent("molecules", "MoleculeHeader.vue");
@@ -11,51 +21,67 @@ const MoleculeInput = loadComponent("molecules", "MoleculeInput.vue");
 
 const router = useRouter();
 const store = stepStore();
+const { _form } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
-const isValidEmail = ref(false);
+const isValidEmail = ref(!_.isEmpty(_form.value["step-one"]));
+
+const props = defineProps({
+  isSlot: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 let modelValues: {
   [key: string]: any;
 } = reactive({});
 
 const stepInvalid: ComputedRef = computed(() => {
-  return !modelValues?.email || !modelValues?.typePessoa || !isValidEmail.value;
+  return (
+    !_form.value["step-one"]?.email || !_form.value["step-one"]?.typePessoa
+  );
 });
 
 function input(name: string, value: string): void {
-  modelValues[name] = value;
+  if (value != null) {
+    modelValues[name] = value;
+    store.setForm("step-one", name, value);
+  }
 }
 
 function nextStep(): void {
-  if (modelValues["typePessoa"].includes("PF")) {
+  if (_form.value["step-one"]["typePessoa"].includes("PF")) {
     router.push({ path: "/step-two/pessoa_fisica" });
   } else {
     router.push({ path: "/step-two/pessoa_juridica" });
   }
-  store.setStep(routerName);
+  store.setStep(routerName.value);
 }
-watch(modelValues, function (value) {
-  store.setForm(routerName.value, value);
-});
 </script>
 <template>
   <OrganismGrid>
     <template #context>
       <div class="form-step">
-        <MoleculeHeader />
+        <MoleculeHeader v-if="!props.isSlot" />
         <MoleculeInput
           type="text"
           label="Endereço de e-mail"
           name="email"
+          :value="_form['step-one']?.email"
           @model="(value) => input('email', value)"
-          @error="(value) => (isValidEmail = value)"
+          @error="
+            (value) => {
+              isValidEmail = value;
+            }
+          "
         />
-        <div class="people-type">
+        <div class="people-type" v-if="!props.isSlot">
           <MoleculeInput
             label="Pessoa física"
             type="radio"
             value="PF"
             name="typePessoa"
+            :checked="_form['step-one']?.typePessoa == 'PF'"
             :customStyle="{ width: 'max-content' }"
             @model="(value) => input('typePessoa', value)"
           />
@@ -64,14 +90,16 @@ watch(modelValues, function (value) {
             type="radio"
             value="PJ"
             name="typePessoa"
+            :checked="_form['step-one']?.typePessoa == 'PJ'"
             :customStyle="{ width: 'max-content' }"
             @model="(value) => input('typePessoa', value)"
           />
         </div>
         <AtomButton
+          v-if="!props.isSlot"
           label="Continuar"
           size="lg"
-          :disabled="stepInvalid"
+          :disabled="stepInvalid || (modelValues['email'] && !isValidEmail)"
           @click.prevent="nextStep()"
         />
       </div>

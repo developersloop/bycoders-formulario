@@ -27,8 +27,8 @@ const props = defineProps({
 
 const visibleInputMask: ComputedRef = computed(() => {
   return (
-    props.name != "email" &&
-    props.name != "password" &&
+    props.name !== "email" &&
+    props.name !== "password" &&
     props.type !== "radio" &&
     props.name !== "nome"
   );

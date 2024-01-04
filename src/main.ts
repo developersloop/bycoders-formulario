@@ -10,5 +10,4 @@ import "@/main.scss";
 const pinia = createPinia();
 const app = createApp(App);
 
-app.use(pinia);
-createApp(App).use(router).use(VueTheMask).mount("#app");
+createApp(App).use(pinia).use(router).use(VueTheMask).mount("#app");

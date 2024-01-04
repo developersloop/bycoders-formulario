@@ -27,46 +27,40 @@ let modelValues: {
   [key: string]: any;
 } = reactive({});
 
-onMounted(() => {
-  modelValues["step-one"] = { ..._form.value["step-one"] };
-});
-
 const stepInvalid: ComputedRef = computed(() => {
   return (
-    !modelValues["razao_social"] ||
-    !modelValues["cnpj"] ||
-    !modelValues["phone"] ||
-    !modelValues["data_abertura"]
+    !_form.value["step-two_pessoa_juridica"]?.razao_social ||
+    !_form.value["step-two_pessoa_juridica"]?.cnpj ||
+    !_form.value["step-two_pessoa_juridica"]?.phone ||
+    !_form.value["step-two_pessoa_juridica"]?.data_abertura
   );
 });
 
 function input(name: string, value: string): void {
-  modelValues[name] = value;
+  if (value) {
+    modelValues[name] = value;
+    store.setForm("step-two_pessoa_juridica", name, value);
+  }
 }
-
-watch(modelValues, function (value) {
-  const spreadModelValues = { ...value };
-  delete spreadModelValues["step-one"];
-  store.setForm("step-two_pessoa_juridica", spreadModelValues);
-});
 </script>
 <template>
   <OrganismGrid>
     <template #context>
       <div class="form-step_two_juridica">
         <MoleculeHeader v-if="!props.isSlot" />
-        <slot name="custom-header" v-if="props.isSlot"></slot>
         <MoleculeInput
           type="text"
           label="Razão Social"
           name="razao_social"
+          :value="_form['step-two_pessoa_juridica']?.razao_social"
           @model="(value) => input('razao_social', value)"
         />
         <MoleculeInput
           type="text"
           label="CNPJ"
-          mask="###.###.###-##"
+          mask="##.###.###/####-##"
           name="cnpj"
+          :value="_form['step-two_pessoa_juridica']?.cnpj"
           @model="(value) => input('cnpj', value)"
         />
         <MoleculeInput
@@ -74,6 +68,7 @@ watch(modelValues, function (value) {
           label="Data de abertura"
           mask="##/##/####"
           name="data_abertura"
+          :value="_form['step-two_pessoa_juridica']?.data_abertura"
           @model="(value) => input('data_abertura', value)"
         />
         <MoleculeInput
@@ -81,6 +76,7 @@ watch(modelValues, function (value) {
           label="Telefone"
           mask="(##)#####-####"
           name="phone"
+          :value="_form['step-two_pessoa_juridica']?.phone"
           @model="(value) => input('phone', value)"
         />
         <slot name="custom" v-if="props.isSlot"></slot>

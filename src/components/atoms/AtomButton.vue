@@ -6,6 +6,7 @@ enum ESizes {
   "md",
   "lg",
 }
+
 const props = defineProps({
   label: {
     type: String,

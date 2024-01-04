@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  checked: {
+    type: Boolean,
+    default: false,
+  },
   label: {
     type: String,
     required: true,
@@ -66,6 +70,7 @@ watchEffect(() => {
       :name="props.name"
       :mask="props.mask"
       :value="props.value"
+      :checked="props.checked"
       @input="validateEmail"
       @model="(value) => (model = value)"
     />

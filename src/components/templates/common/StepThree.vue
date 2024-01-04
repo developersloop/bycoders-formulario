@@ -16,48 +16,41 @@ const { _form } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
 const isValidEmail = ref(false);
 
+const props = defineProps({
+  isSlot: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 let modelValues: {
   [key: string]: any;
 } = reactive({});
 
-onMounted(() => {
-  modelValues["step-one"] = { ..._form.value["step-one"] };
-  modelValues["step-two_pessoa_fisica"] = {
-    ..._form.value["step-two_pessoa_fisica"],
-  };
-  modelValues["step-two_pessoa_juridica"] = {
-    ..._form.value["step-two_pessoa_juridica"],
-  };
-});
-
 function input(name: string, value: string): void {
-  modelValues[name] = value;
+  if (value) {
+    modelValues[name] = value;
+    store.setForm("step-three", name, value);
+  }
 }
-
-watch(modelValues, function (value) {
-  const spreadModelValues = { ...value };
-  delete spreadModelValues["step-one"];
-  delete spreadModelValues["step-two_pessoa_fisica"];
-  delete spreadModelValues["step-two_pessoa_juridica"];
-  store.setForm("step-three", spreadModelValues);
-});
 </script>
 <template>
   <OrganismGrid>
     <template #context>
       <div class="form-step_two_three">
-        <MoleculeHeader />
+        <MoleculeHeader v-if="!props.isSlot" />
         <MoleculeInput
           type="password"
           label="Sua Senha"
           name="password"
+          :value="_form['step-three'].password"
           @model="(value) => input('password', value)"
         />
-        <div class="actions">
+        <div class="actions" v-if="!props.isSlot">
           <AtomButton
             label="Voltar"
             variant="outlined"
-            @click.prevent="$router.push({ path: '/step-two' })"
+            @click.prevent="$router.go(-1)"
           />
           <AtomButton
             label="Continuar"
