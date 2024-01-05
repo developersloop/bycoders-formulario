@@ -33,6 +33,7 @@ const stepOne = defineAsyncComponent({
 });
 
 const stepTwo = defineAsyncComponent({
+  // eslint-disable-next-line prettier/prettier
   loader: () => import(`@/components/templates/common/StepTwo/${nameComponent}.vue`),
 });
 
