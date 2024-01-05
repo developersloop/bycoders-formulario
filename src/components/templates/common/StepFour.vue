@@ -7,7 +7,6 @@ import {
   watch,
   onMounted,
   defineAsyncComponent,
-  onBeforeUnmount,
 } from "vue";
 import { loadComponent } from "@/utils";
 import { useRouter } from "vue-router";
@@ -21,7 +20,7 @@ const MoleculeInput = loadComponent("molecules", "MoleculeInput.vue");
 
 const router = useRouter();
 const store = stepStore();
-const { _form } = storeToRefs(store);
+const { _form, _currentStep } = storeToRefs(store);
 const routerName = ref(router.currentRoute.value.name);
 const isValidEmail = ref(false);
 
@@ -34,25 +33,16 @@ const stepOne = defineAsyncComponent({
 });
 
 const stepTwo = defineAsyncComponent({
-  loader: () =>
-    import(`@/components/templates/common/StepTwo/${nameComponent}.vue`),
+  loader: () => import(`@/components/templates/common/StepTwo/${nameComponent}.vue`),
 });
 
 const stepThree = defineAsyncComponent({
   loader: () => import(`@/components/templates/common/StepThree.vue`),
 });
 
-function fetchStore(): void {
-  store.persistForm(_form.value).then((resp) => {
-    if (resp.status == 201) {
-      alert("Registro criado com sucesso!");
-      setTimeout(() => {
-        router.push("/step-one");
-      }, 500);
-    }
-  });
-}
-onBeforeUnmount(() => {
+function cleanStates(): void {
+  store.setStep(null);
+
   _form.value["step-one"] = {
     email: null,
     typePessoa: null,
@@ -74,7 +64,19 @@ onBeforeUnmount(() => {
   _form.value["step-three"] = {
     password: null,
   };
-});
+}
+
+function fetchStore(): void {
+  store.persistForm(_form.value).then((resp) => {
+    if (resp.status == 201) {
+      alert("Registro criado com sucesso!");
+      setTimeout(() => {
+        cleanStates();
+        router.push("/step-one");
+      }, 500);
+    }
+  });
+}
 </script>
 <template>
   <div class="form-step_four">
