@@ -65,6 +65,7 @@ const routes = [
       },
     ],
   },
+  { path: "/:pathMatch(.*)*", redirect: "/step-one" },
 ];
 
 const router = createRouter({
