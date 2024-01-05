@@ -7,6 +7,7 @@ import {
   watch,
   onMounted,
   defineAsyncComponent,
+  onBeforeUnmount,
 } from "vue";
 import { loadComponent } from "@/utils";
 import { useRouter } from "vue-router";
@@ -42,8 +43,38 @@ const stepThree = defineAsyncComponent({
 });
 
 function fetchStore(): void {
-  store.persistForm(_form.value);
+  store.persistForm(_form.value).then((resp) => {
+    if (resp.status == 201) {
+      alert("Registro criado com sucesso!");
+      setTimeout(() => {
+        router.push("/step-one");
+      }, 500);
+    }
+  });
 }
+onBeforeUnmount(() => {
+  _form.value["step-one"] = {
+    email: null,
+    typePessoa: null,
+  };
+
+  _form.value["step-two_pessoa_fisica"] = {
+    nome: null,
+    cpf: null,
+    data_nascimento: null,
+    phone: null,
+  };
+
+  _form.value["step-two_pessoa_juridica"] = {
+    razao_social: null,
+    cnpj: null,
+    data_abertura: null,
+    phone: null,
+  };
+  _form.value["step-three"] = {
+    password: null,
+  };
+});
 </script>
 <template>
   <div class="form-step_four">

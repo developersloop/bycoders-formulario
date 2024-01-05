@@ -6,7 +6,7 @@ export type TPayload = {
   "step-two_pessoa_fisica": {
     nome?: string | null,
     cpf?: string | null,
-    data_nascimento?: Data | string | null,
+    data_nascimento?: Date | string | null,
     phone?: string | null,
   },
   "step-two_pessoa_juridica": {
